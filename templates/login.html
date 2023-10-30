@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        .login {
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 50%;
+            height: 50%;
+            margin: auto;
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+        
+        .login p{
+            letter-spacing: 5px;
+            
+        }
+        .login form{
+            justify-content: center;
+            text-align: center;
+            width: 50%;
+            margin: auto;
+            padding: 50px;
+
+        }
+        .login input{
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            outline: none;
+            resize: both;
+            width: 300px;
+        }
+        .login button{
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px;
+            color: white;
+            background-color: blue;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            width: 320px;
+        }
+
+        .login button:hover{
+            color: blue;
+            background-color: white;
+            border: 2px solid blue;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login">
+        <p> Employee Management System</p>
+        <form action="/authentication" method="post">
+            <input type="text" name="empid" placeholder="Employee ID"> <br>
+            <input type="password" name="pwd" placeholder="Password"> <br>
+            <button type="submit">Log in</button>
+        </form>
+    </div>
+    
+</body>
+</html>
