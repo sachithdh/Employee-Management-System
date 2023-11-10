@@ -17,7 +17,7 @@
             margin: auto;
             padding: 50px;
             border-radius: 8px;
-            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+            /* box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5); */
         }
         
         .login p{
@@ -66,8 +66,8 @@
 <body>
     <div class="login">
         <p> Employee Management System</p>
-        <form action="/authentication" method="post">
-            <input type="text" name="empid" placeholder="Employee ID"> <br>
+        <form action="/authentication" method="POST">
+            <input type="text" name="uname" placeholder="User Name"> <br>
             <input type="password" name="pwd" placeholder="Password"> <br>
             <button type="submit">Log in</button>
         </form>
