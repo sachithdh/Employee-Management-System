@@ -1,6 +1,6 @@
 import mysql.connector
 
-def credentials():
+def get_data(table_name, ):
     
     config = {
         "host": "localhost",
@@ -13,16 +13,19 @@ def credentials():
         conn = mysql.connector.connect(**config)
         cursor = conn.cursor()
 
-        query = f"SELECT * FROM login"
-        cursor.execute(query)
+        query1 = f"SELECT * FROM {table_name}"
+        cursor.execute(query1)
+        rows = cursor.fetchall()
+        data = [row for row in rows]
+
+        query2 = f"DESCRIBE {table_name}"
+        cursor.execute(query2)
         columns = cursor.fetchall()
-        uname = [col[0] for col in columns]
-        passwd = [col[1] for col in columns]
-        uid = [col[2] for col in columns]
+        column = [col[0] for col in columns]
 
 
 
-        return uname, passwd, uid
+        return data, column
 
     except mysql.connector.Error as error:
         return error

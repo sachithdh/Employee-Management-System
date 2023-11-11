@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content%}
+<head>
+    <style>
+        .header {
+            font-size: 32px;
+        }
+        h1 {
+            color: #001fe7;
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            margin-top: -40px;
+            font-size: 18px;
+            color: rgb(95, 95, 95);
+        }
+
+        .img {
+            margin-left: auto;
+            margin-top: -40px;
+            width: 40%;
+            height: fit-content;
+        }
+
+        .link-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 32px;
+            align-items: center;
+        }
+
+        .link-container li {
+            list-style-type: none;
+        }
+
+        .link-container li a {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: blue;
+            border: 2px solid blue;
+            padding: 20px;
+            width: 200px;
+            height: 200px;
+            box-sizing: border-box;
+        }
+
+
+        .link-container li a:hover,
+        .link-container li a:active {
+            background-color: white;
+            color: green;
+        }
+
+        .link-container a {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background-color: white;
+            color: black;
+            border: 2px solid green;
+            padding: 20px;
+        }
+
+        .link-container a:hover,
+        .link-container a:active {
+            background-color: green;
+            color: white;
+        }
+
+    </style>
+</head>
+<div class="header"> <h1>Hi, {{data[1]}}</h1> </div>
+<div class="container">
+    <div class="data">
+        <p>
+            {{data[8]}} Department  <br>
+        </p>
+            <!-- {{data[1]}} <br> -->
+            <!-- <span>Employee_Id:</span> {{data[0]}} <br>
+            <span>Date of Birth:</span> {{data[2]}} <br>
+            <span>Gender:</span> {{data[3]}} <br>
+            <span>Address:</span> {{data[4]}} <br>
+            <span>Contact:</span> {{data[5]}} <br>
+            <span>Email:</span> {{data[6]}} <br>
+            <span>Joining Date:</span> {{data[7]}} <br>
+            <span>Job:</span> {{data[9]}} -->
+        
+        <!-- <img src="/static/images/profile_avatar.png" alt="profile avatar" class="img"> -->
+    </div>
+</div>
+<hr>
+<ul>
+        <div class="link-container">
+            <li>
+                <a class="nav-link active" href="/employee">Employees</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/department">Department</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/job">Job</a>
+            </li>
+        </div>
+
+        <div class="link-container">
+            <li>
+                <a class="nav-link" href="/attendance">Attendance</a>
+            </li>
+
+            <li>
+                <a class="nav-link" href="/leave">Leave</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/applicant">Applicant</a>
+            </li>
+        </div>
+
+        <div class="link-container">
+            <li>
+                <a class="nav-link" href="/vacancy">Vacancy</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/vacancy">Settings</a>
+            </li>
+        </div>
+    </div>
+    </ul>
+
+{% endblock %}

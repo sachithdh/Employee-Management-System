@@ -1,7 +1,70 @@
 {% extends "base.html" %}
 
-{% block title %} Profile {% endblock %}
+{% block title %} Home {% endblock %}
 
 {% block content%}
+<style>
+    .data {
+        width: 50%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
+    .data p {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333;
+    }
+
+    .data span {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .data p span {
+        margin-right: 5px;
+    }
+
+    .data p:first-child {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .edit-link a:link, a:visited {
+        background-color: #f44336;
+        color: white;
+        padding: 15px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        margin: auto;
+        width: 80px;
+    }
+
+    .edit-link a:hover, a:active {
+        background-color: red;
+    }
+</style>
+<div class="data">
+    <p>
+        {{data[1]}} <br>
+        <span>Employee_Id:</span> {{data[0]}} <br>
+        <span>Date of Birth:</span> {{data[2]}} <br>
+        <span>Gender:</span> {{data[3]}} <br>
+        <span>Address:</span> {{data[4]}} <br>
+        <span>Contact:</span> {{data[5]}} <br>
+        <span>Email:</span> {{data[6]}} <br>
+        <span>Joining Date:</span> {{data[7]}} <br>
+        <span>Department: </span> {{data[8]}} <br>
+        <span>Job:</span> {{data[9]}}
+    </p>
+</div>
+<div class="edit-link">
+    <a href="/edit">Edit profile</a>
+</div>
+              
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from dbconnector.get_data import get_data
 from dbconnector.get_login import credentials
+from dbconnector.profile_info import get_details
 
 
 # Initializing a Flask app
@@ -14,7 +15,9 @@ def home():
     pwd = session.get("pwd", None)
     
     if uname is not None and pwd is not None:
-        return render_template("profile.html")
+        uid = session["uid"]
+        data = get_details("hr_manager", uid)
+        return render_template("home.html", data=data[0])
     else:
         return redirect(url_for("login"))
 
@@ -54,14 +57,15 @@ def authorization():
     pwd = session.get("pwd", None)
     
     if uname is not None and pwd is not None:
-        usr, passwd = credentials()
+        usr, passwd, uid = credentials()
 
         if uname in usr:
             usr_index = usr.index(uname)
+            session["uid"] = uid[usr_index]
 
             if passwd[usr_index] == pwd:
 
-                return render_template("profile.html")
+                return redirect(url_for("profile"))
             else: 
                 return "<h3> Invalid password </h3>"
         
@@ -71,6 +75,13 @@ def authorization():
         # Handle the case when session keys are not present
         return redirect(url_for("login"))
 
+@app.route("/profile")
+def profile():
+    uid = session["uid"]
+    data = get_details("hr_manager", uid)
+    return render_template("profile.html", data=data[0])
+    
+    
 # Logout  
 @app.route("/logout")
 def logout():
@@ -78,6 +89,9 @@ def logout():
     session.pop("pwd", None)
 
     return redirect(url_for("login"))
+
+
+
 
 # Employee page
 @app.route("/employee")
@@ -127,6 +141,12 @@ def vacancy():
 
     return render_template("data.html", data=data, columns=columns)
 
+@app.route("/edit", methods=["POST", "GET"])
+def edit_profile():
+    uid = session["uid"]
+    data = get_details("hr_manager", uid)
+    return render_template("edit-profile.html", data=data[0])
+    
 
 # run the app
 if __name__ == "__main__":
