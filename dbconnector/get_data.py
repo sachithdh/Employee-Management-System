@@ -5,7 +5,7 @@ def get_data(table_name):
     config = {
         "host": "localhost",
         "user": "root",
-        "password": "84503580",
+        "password": "hrpass",
         "database": "hr_department"
     }
 
