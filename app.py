@@ -4,7 +4,6 @@ from dbconnector.get_login import credentials
 from dbconnector.profile_info import get_details
 
 
-# Initializing a Flask app
 app = Flask(__name__)
 app.secret_key = "asdfghjkl;'"
 
