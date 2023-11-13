@@ -4,8 +4,8 @@ def credentials():
     
     config = {
         "host": "localhost",
-        "user": "root",
-        "password": "84503580",
+        "user": "hr_manager",
+        "password": "hrpass",
         "database": "hr_department"
     }
 

@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from dbconnector.get_data import get_data
 from dbconnector.get_login import credentials
 from dbconnector.profile_info import get_details
+from dbconnector.add_to_table import add_data
+from dbconnector.search import search_item
 
 
 # Initializing a Flask app
@@ -9,8 +11,8 @@ app = Flask(__name__)
 app.secret_key = "asdfghjkl;'"
 
 # Define a route for the landing page
-@app.route("/")
-def home():
+@app.route("/hr_home")
+def hr_home():
     uname = session.get("uname", None)
     pwd = session.get("pwd", None)
     
@@ -20,6 +22,19 @@ def home():
         return render_template("home.html", data=data[0])
     else:
         return redirect(url_for("login"))
+    
+@app.route("/emp_home")
+def emp_home():
+    uname = session.get("uname", None)
+    pwd = session.get("pwd", None)
+    
+    if uname is not None and pwd is not None:
+        uid = session["uid"]
+        data = get_details("hr_manager", uid)
+        return render_template("emp-home.html", data=data[0])
+    else:
+        return redirect(url_for("login"))
+
 
 # Login page  
 @app.route("/login", methods=["POST", "GET"])
@@ -62,10 +77,16 @@ def authorization():
         if uname in usr:
             usr_index = usr.index(uname)
             session["uid"] = uid[usr_index]
-
+            uid = session["uid"]
+            data = get_details("hr_manager", uid)
+            session["jobid"] = data[0][9]
+            
             if passwd[usr_index] == pwd:
-
-                return redirect(url_for("profile"))
+                jobid = session["jobid"]
+                if jobid == 1:
+                    return redirect(url_for("hr_home"))
+                else :
+                    return redirect(url_for("emp_home"))
             else: 
                 return "<h3> Invalid password </h3>"
         
@@ -96,50 +117,72 @@ def logout():
 # Employee page
 @app.route("/employee")
 def employee():
-    data, columns = get_data("employee")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("employee", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Employee")
 
 # Department page
 @app.route("/department")
 def department():
-    data, columns = get_data("department")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("department", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Department")
 # Job page
 @app.route("/job")
 def job():
-    data, columns = get_data("job")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("job", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Job")
 
 # Attendance page
 @app.route("/attendance")
 def attendance():
-    data, columns = get_data("attendance")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("attendance", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Attendance")
 
 # Leave page
 @app.route("/leave")
 def leave():
-    data, columns = get_data("`leave`")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("employee_leave", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Leave")
 
 # Applicant page
 @app.route("/applicant")
 def applicant():
-    data, columns = get_data("applicant")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("applicant", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Applicant")
 
 # Vacancy page
 @app.route("/vacancy")
 def vacancy():
-    data, columns = get_data("vacancy")
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("vacancy", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns)
+    return render_template("data.html", data=data, columns=columns, title="Vacancy")
+
+@app.route("/payroll")
+def payroll():
+    jobid = session["jobid"]
+    empid = session["uid"]
+    data, columns = get_data("payroll", jobid, empid)
+
+    return render_template("data.html", data=data, columns=columns, title="Payroll")
 
 @app.route("/edit", methods=["POST", "GET"])
 def edit_profile():
@@ -147,6 +190,39 @@ def edit_profile():
     data = get_details("hr_manager", uid)
     return render_template("edit-profile.html", data=data[0])
     
+@app.route("/validate", methods=["POST", "GET"])
+def validate():
+    if request.method == "POST":
+        uname = request.form["uname"]
+        uid = request.form["uid"]
+        dob = request.form["dob"]
+        gender = request.form["gender"]
+        addr = request.form["addr"]
+        contact = request.form["contact"]
+        mail = request.form["mail"]
+        jdate = request.form["jdate"]
+        dept = request.form["dept"]
+        jid = request.form["jid"]
+
+        data = (uid, uname, dob, gender, addr, contact, mail, jdate, dept, jid)
+        result = add_data("employee", data)
+        return f"<script> window.alert(\"{result}\"); </script>"
+
+@app.route("/search", methods=["POST", "GET"])
+def search():
+    if request.method == "POST":
+        table_name = request.form["table_name"]
+        data, columns = get_data(table_name)
+
+        records = {}
+
+        for col in columns:
+            records[col] = request.form[col]
+        
+        data, columns = search_item(table_name, records)
+
+        return render_template("data.html", data=data, columns=columns, title=table_name)
+        
 
 # run the app
 if __name__ == "__main__":

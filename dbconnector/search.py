@@ -1,10 +1,10 @@
 import mysql.connector
 
-def get_data(table_name, ):
-    
+def search_item(table_name, records):
+
     config = {
         "host": "localhost",
-        "user": "root",
+        "user": "hr_manager",
         "password": "hrpass",
         "database": "hr_department"
     }
@@ -13,7 +13,9 @@ def get_data(table_name, ):
         conn = mysql.connector.connect(**config)
         cursor = conn.cursor()
 
-        query1 = f"SELECT * FROM {table_name}"
+        filtered_records = {key: value for key, value in records.items() if value != ''}
+        condition = ' AND '.join([f"{key}='{value}'" for key, value in filtered_records.items()])
+        query1 = f"SELECT * FROM {table_name} WHERE {condition}"
         cursor.execute(query1)
         rows = cursor.fetchall()
         data = [row for row in rows]

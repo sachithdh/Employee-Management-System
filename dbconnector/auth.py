@@ -4,8 +4,8 @@ def get_emp_id(table_name, data):
     
     config = {
         "host": "localhost",
-        "user": "root",
-        "password": "",
+        "user": "hr_manager",
+        "password": "hrpass",
         "database": "demo_database"
     }
 

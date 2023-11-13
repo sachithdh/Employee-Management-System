@@ -3,6 +3,73 @@
 {% block title %} Data {% endblock %}
 
 {% block content %}
+<head>
+<style>
+    .filter {
+        margin: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+    }
+
+    .filter form {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .filter fieldset {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 10px 0;
+        padding: 10px;
+    }
+
+    legend {
+        font-weight: bold;
+    }
+
+    .filter span {
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .filter input[type="text"] {
+        padding: 5px;
+        width: 150px;
+        box-sizing: border-box;
+    }
+
+    .filter input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter input[type="submit"]:hover {
+    background-color: #45a049;
+}
+</style>
+</head>
+<body>
+    <h1 style="text-align: center;">{{title}}</h1>
+    <div class="filter">
+        <form action="/search" method="post">
+            <fieldset style="margin: 10px;">
+                <legend>Search for {{title}} :</legend>
+                {% for column in columns %}
+                    <span>{{ column }} <input type="text" name="{{ column }}"></span>
+                {% endfor %}
+
+                <input type="submit" value="Search">
+                <input type="text" name="table_name" value="{{title}}" style="display: none;">
+            </fieldset>
+        </form>
+    </div>
+
     <table class="table" border="1px" style="border-collapse: collapse;">
         <tr>
             {% for column in columns %}
