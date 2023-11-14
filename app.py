@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from dbconnector.get_data import get_data
 from dbconnector.get_login import credentials
 from dbconnector.profile_info import get_details
-from dbconnector.add_to_table import add_data
+from dbconnector.update_table import update_table
 from dbconnector.search import search_item
+from dbconnector.insert_data import insert_data
 
 
 # Initializing a Flask app
@@ -11,30 +12,21 @@ app = Flask(__name__)
 app.secret_key = "asdfghjkl;'"
 
 # Define a route for the landing page
-@app.route("/hr_home")
-def hr_home():
+@app.route("/")
+def home():
     uname = session.get("uname", None)
     pwd = session.get("pwd", None)
     
     if uname is not None and pwd is not None:
         uid = session["uid"]
         data = get_details("hr_manager", uid)
-        return render_template("home.html", data=data[0])
+        jobid = session["jobid"]
+        if jobid == 1:
+            return render_template("home.html", data=data[0])
+        else:
+            return render_template("emp-home.html", data=data[0])
     else:
         return redirect(url_for("login"))
-    
-@app.route("/emp_home")
-def emp_home():
-    uname = session.get("uname", None)
-    pwd = session.get("pwd", None)
-    
-    if uname is not None and pwd is not None:
-        uid = session["uid"]
-        data = get_details("hr_manager", uid)
-        return render_template("emp-home.html", data=data[0])
-    else:
-        return redirect(url_for("login"))
-
 
 # Login page  
 @app.route("/login", methods=["POST", "GET"])
@@ -58,6 +50,8 @@ def authentication():
             session["pwd"] = pwd
 
             return redirect(url_for("authorization"))
+        else:
+            return "<h2>  Invalid username or password"
     else:
         if "uname" in session:
             return redirect(url_for("authorization"))
@@ -83,10 +77,7 @@ def authorization():
             
             if passwd[usr_index] == pwd:
                 jobid = session["jobid"]
-                if jobid == 1:
-                    return redirect(url_for("hr_home"))
-                else :
-                    return redirect(url_for("emp_home"))
+                return redirect(url_for("home"))
             else: 
                 return "<h3> Invalid password </h3>"
         
@@ -121,7 +112,7 @@ def employee():
     empid = session["uid"]
     data, columns = get_data("employee", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Employee")
+    return render_template("data.html", data=data, columns=columns, title="Employee", jobid=session["jobid"])
 
 # Department page
 @app.route("/department")
@@ -130,7 +121,7 @@ def department():
     empid = session["uid"]
     data, columns = get_data("department", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Department")
+    return render_template("data.html", data=data, columns=columns, title="Department", jobid=session["jobid"])
 # Job page
 @app.route("/job")
 def job():
@@ -138,7 +129,7 @@ def job():
     empid = session["uid"]
     data, columns = get_data("job", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Job")
+    return render_template("data.html", data=data, columns=columns, title="Job", jobid=session["jobid"])
 
 # Attendance page
 @app.route("/attendance")
@@ -147,7 +138,7 @@ def attendance():
     empid = session["uid"]
     data, columns = get_data("attendance", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Attendance")
+    return render_template("data.html", data=data, columns=columns, title="Attendance", jobid=session["jobid"])
 
 # Leave page
 @app.route("/leave")
@@ -156,7 +147,7 @@ def leave():
     empid = session["uid"]
     data, columns = get_data("employee_leave", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Leave")
+    return render_template("data.html", data=data, columns=columns, title="Employee_Leave", jobid=session["jobid"])
 
 # Applicant page
 @app.route("/applicant")
@@ -165,7 +156,7 @@ def applicant():
     empid = session["uid"]
     data, columns = get_data("applicant", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Applicant")
+    return render_template("data.html", data=data, columns=columns, title="Applicant", jobid=session["jobid"])
 
 # Vacancy page
 @app.route("/vacancy")
@@ -174,7 +165,7 @@ def vacancy():
     empid = session["uid"]
     data, columns = get_data("vacancy", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Vacancy")
+    return render_template("data.html", data=data, columns=columns, title="Vacancy", jobid=session["jobid"])
 
 @app.route("/payroll")
 def payroll():
@@ -182,7 +173,7 @@ def payroll():
     empid = session["uid"]
     data, columns = get_data("payroll", jobid, empid)
 
-    return render_template("data.html", data=data, columns=columns, title="Payroll")
+    return render_template("data.html", data=data, columns=columns, title="Payroll", jobid=session["jobid"])
 
 @app.route("/edit", methods=["POST", "GET"])
 def edit_profile():
@@ -199,18 +190,20 @@ def validate():
         gender = request.form["gender"]
         addr = request.form["addr"]
         contact = request.form["contact"]
-        mail = request.form["mail"]
+        mail = request.form["mai]l"]
         jdate = request.form["jdate"]
         dept = request.form["dept"]
         jid = request.form["jid"]
 
         data = (uid, uname, dob, gender, addr, contact, mail, jdate, dept, jid)
-        result = add_data("employee", data)
+        result = update_table("employee", data)
         return f"<script> window.alert(\"{result}\"); </script>"
 
 @app.route("/search", methods=["POST", "GET"])
 def search():
-    if request.method == "POST":
+    if session["jobid"] != 1:
+        return "<script> window.alert(\"Access Denied. You have no permission to perform this action\"); </script>"
+    elif request.method == "POST":
         table_name = request.form["table_name"]
         data, columns = get_data(table_name)
 
@@ -221,8 +214,40 @@ def search():
         
         data, columns = search_item(table_name, records)
 
-        return render_template("data.html", data=data, columns=columns, title=table_name)
-        
+        return render_template("data.html", data=data, columns=columns, title=table_name, jobid=session["jobid"])
+    
+@app.route("/apply")
+def apply():
+    data, columns = get_data("vacancy")
+
+    return render_template("apply-for-job.html", data=data, columns=columns)
+
+@app.route("/add_data", methods=["POST", "GET"])
+def add_data():
+    if session["jobid"] != 1:
+        return "<script> window.alert(\"Access Denied. You have no permission to perform this action\"); </script>"
+    table_name = request.form["table_name"]
+    data, columns = get_data(table_name)
+
+    return render_template("add-data.html", columns=columns, title=table_name)
+
+@app.route("/insert", methods=["POST", "GET"])
+def insert():
+        if session["jobid"] != 1:
+            return "<script> window.alert(\"Access Denied. You have no permission to perform this action\"); </script>"
+        elif request.method == "POST":
+            table_name = request.form["table_name"]
+            data, columns = get_data(table_name)
+
+            records = {}
+
+            for col in columns:
+                records[col] = request.form[col]
+
+            result = insert_data(table_name, records)
+            return f"<script> window.alert(\"{result}\"); </script>"
+
+
 
 # run the app
 if __name__ == "__main__":

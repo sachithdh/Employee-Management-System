@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %} Add Data {% endblock %}
+
+{% block content %}
+<style>
+    .edit-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.edit-form form {
+    padding: 20px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.edit-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.edit-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.edit-form input,
+select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.edit-form input[type="radio"] {
+    margin-right: 5px;
+}
+
+.edit-form input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+</style>
+<div class="edit-form">
+    <form action="/insert" method="post">
+            {% for column in columns %}
+                <label for="{{ column }}">{{ column }}: </label>
+                <input type="text" name="{{ column }}" ></span>
+            {% endfor %}
+            <input type="submit" value="save changes">
+            <input type="text" name="table_name" value="{{title}}" style="display: none;">
+    </form>
+</div>
+{% endblock %}

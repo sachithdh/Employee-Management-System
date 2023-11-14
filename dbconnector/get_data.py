@@ -1,6 +1,6 @@
 import mysql.connector
 
-def get_data(table_name, jobid, empid):
+def get_data(table_name, jobid=1, empid=None):
     
     config = {
         "host": "localhost",
