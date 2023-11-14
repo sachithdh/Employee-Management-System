@@ -1,7 +1,10 @@
 # Employee-Management-System
 
-## !!Note
-Still under development. May not work as you expected
+**To run this, you must have MySQL installed on your server**
+
+
+See how to install MYSQL [here](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-install.html)
+
 ## Installation
 
 ```console
